@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import { useStore } from '@/store'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import { useStore } from '@/store';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/about',
@@ -16,19 +16,24 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/AboutView.vue'),
     },
     {
       path: '/products',
       name: 'products',
-      component: () => import('../views/ProductsView.vue')
-    }
-  ]
-})
+      component: () => import('../views/ProductsView.vue'),
+    },
+    {
+      path: '/products/new',
+      name: 'add product',
+      component: () => import('../views/AddProductView.vue'),
+    },
+  ],
+});
 
 router.beforeEach(() => {
   const store = useStore();
-  store.closeSidebar()
-})
+  store.closeSidebar();
+});
 
-export default router
+export default router;
