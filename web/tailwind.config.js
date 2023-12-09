@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {}
   },
-  plugins: ['prettier-plugin-tailwindcss']
-}
 
+  // eslint-disable-next-line
+  plugins: ['prettier-plugin-tailwindcss', require('daisyui')]
+}

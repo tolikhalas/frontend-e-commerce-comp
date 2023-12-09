@@ -2,7 +2,5 @@
 </script>
 
 <template>
-  <main>
-    <h1>Home page</h1>
-  </main>
+  <h1>Products</h1>
 </template>

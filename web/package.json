@@ -12,6 +12,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "oh-vue-icons": "^1.0.0-rc3",
+    "pinia": "^2.1.7",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5"
   },
@@ -22,7 +24,8 @@
     "@vue/test-utils": "^2.4.3",
     "autoprefixer": "^10.4.16",
     "daisyui": "latest",
-    "eslint": "^8.49.0",
+    "eslint": "^8.55.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-vue": "^9.17.0",
     "jsdom": "^23.0.1",
     "postcss": "^8.4.32",
