@@ -4,20 +4,46 @@ import { useRoute } from 'vue-router';
 import { RouterLink } from 'vue-router';
 import { Form, Field } from 'vee-validate';
 import http from '@/api';
+import { useRouter } from 'vue-router';
 
 const product = ref(null);
 const imageURL = ref(null);
 const productId = ref(null);
 
+const router = useRouter();
+
 onMounted(async () => {
   const route = useRoute();
-  productId.value = route.params.id;
+  productId.value = Number(route.params.id);
   const { data } = await http.get(`/api/products/${productId.value}`);
   product.value = data?.product;
-  if (product.value.image) {
-    imageURL.value = `${http.defaults.baseURL}storage/${product.value.image}`;
+  if (!product.value.image) {
+    product.value.image = getImageUrl('placeholder.jpg');
+  } else {
+    product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
   }
 });
+
+const onChange = async (values) => {
+  const form = new FormData();
+  form.append('_method', 'put');
+  form.append('name', values['name']);
+  form.append('brand', values['brand']);
+  form.append('model_name', values['model name']);
+  form.append('quantity', values['quantity']);
+  form.append('image', values['image']);
+  form.append('description', values['description']);
+
+  await http.post(`/api/products/${productId.value}`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  router.push('/products');
+};
+
+const getImageUrl = (name) => {
+  return new URL(`../assets/img/${name}`, import.meta.url).href;
+};
 </script>
 
 <template>
@@ -26,10 +52,9 @@ onMounted(async () => {
       >Back to products</RouterLink
     >
     <div v-if="product" class="card border bg-base-200">
-      <Form>
+      <Form @submit="onChange">
         <figure class="rounded-t-xl lg:w-[600px]">
-          <!-- FIXME: Placeholder image doesn't appear. Suggest that's internal bag -->
-          <img :src="imageURL ?? 'src/assets/img/placeholder.jpg'" alt="product image" />
+          <img :src="product.image" alt="product image" />
         </figure>
         <div class="card-body">
           <div class="flex flex-col">
@@ -46,7 +71,7 @@ onMounted(async () => {
           </div>
           <div class="flex flex-col">
             <label for="name">Product's photo</label>
-            <Field class="file-input" type="file" name="model_name" />
+            <Field class="file-input" type="file" name="image" />
           </div>
           <div class="flex flex-col">
             <label for="name">Product's quantity</label>
@@ -63,7 +88,7 @@ onMounted(async () => {
             />
           </div>
           <div class="card-actions">
-            <button class="btn btn-secondary">save</button>
+            <input type="submit" class="btn btn-secondary" value="save" />
             <RouterLink class="btn btn-accent" :to="`/products/${productId}`"
               >discard & back</RouterLink
             >
