@@ -6,20 +6,26 @@ const products = ref(null);
 const imageURL = ref(null);
 
 onMounted(async () => {
-  const { data } = await http.get('/api/products');
-  imageURL.value = `${http.defaults.baseURL}storage`;
-  products.value = data?.products;
+  try {
+    const response = await http.get('/api/products');
+    if (response.status === 200) {
+      const data = response.data;
+      imageURL.value = `${http.defaults.baseURL}storage`;
+      products.value = data?.products;
+    }
+  } catch (err) {}
 });
 </script>
 
 <template>
   <section class="m-4 grid gap-4">
-    <div class="join w-full justify-self-center lg:w-8/12">
+    <div v-if="products" class="join justify-self-center lg:w-8/12">
       <div class="w-full">
         <div class="w-full">
           <input class="input join-item input-bordered w-full" placeholder="Search" />
         </div>
       </div>
+      <!-- Mock filtering -->
       <select class="join-item select select-bordered">
         <option disabled selected>Filter</option>
         <option>Phones</option>
@@ -29,7 +35,7 @@ onMounted(async () => {
       <button class="btn btn-primary join-item">Search</button>
     </div>
     <div class="flex justify-center">
-      <div class="grid gap-4 md:grid-cols-2 lg:w-8/12 lg:grid-cols-3">
+      <div v-if="products" class="grid gap-4 md:grid-cols-2 lg:w-8/12 lg:grid-cols-3">
         <div v-for="(product, index) in products" :key="index" class="card bg-base-300">
           <figure>
             <img
@@ -56,6 +62,9 @@ onMounted(async () => {
             </div>
           </div>
         </div>
+      </div>
+      <div v-else>
+        <h1 class="text-3xl">No products</h1>
       </div>
     </div>
   </section>
