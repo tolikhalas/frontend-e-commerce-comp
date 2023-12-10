@@ -7,21 +7,24 @@ import http from '@/api';
 import { useRouter } from 'vue-router';
 
 const product = ref(null);
-const imageURL = ref(null);
 const productId = ref(null);
-
 const router = useRouter();
 
 onMounted(async () => {
   const route = useRoute();
   productId.value = Number(route.params.id);
-  const { data } = await http.get(`/api/products/${productId.value}`);
-  product.value = data?.product;
-  if (!product.value.image) {
-    product.value.image = getImageUrl('placeholder.jpg');
-  } else {
-    product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
-  }
+  try {
+    const response = await http.get(`/api/products/${productId.value}`);
+    if (response.status === 200) {
+      const data = await response.data;
+      product.value = data?.product;
+      if (!product.value.image) {
+        product.value.image = getImageUrl('placeholder.jpg');
+      } else {
+        product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
+      }
+    }
+  } catch (err) {}
 });
 
 const onChange = async (values) => {
@@ -95,6 +98,9 @@ const getImageUrl = (name) => {
           </div>
         </div>
       </Form>
+    </div>
+    <div v-else>
+      <h1 class="text-3xl">No such product</h1>
     </div>
   </section>
 </template>

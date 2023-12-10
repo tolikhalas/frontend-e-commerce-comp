@@ -6,19 +6,22 @@ import http from '@/api';
 
 const product = ref(null);
 const productId = ref(null);
-const imageURL = ref(null);
 
 onMounted(async () => {
   const route = useRoute();
   productId.value = Number(route.params.id);
-  const { data } = await http.get(`/api/products/${productId.value}`);
-  product.value = data?.product;
-  console.log(product.value.image);
-  if (!product.value.image) {
-    product.value.image = getImageUrl('placeholder.jpg');
-  } else {
-    product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
-  }
+  try {
+    const response = await http.get(`/api/products/${productId.value}`);
+    if (response.status === 200) {
+      const data = await response.data;
+      product.value = data?.product;
+      if (!product.value.image) {
+        product.value.image = getImageUrl('placeholder.jpg');
+      } else {
+        product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
+      }
+    }
+  } catch (err) {}
 });
 
 const getImageUrl = (name) => {
@@ -50,6 +53,9 @@ const getImageUrl = (name) => {
           <RouterLink class="btn btn-accent" :to="`/products/${productId}/edit`">Edit</RouterLink>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <h1 class="text-3xl">No such product</h1>
     </div>
   </section>
 </template>
