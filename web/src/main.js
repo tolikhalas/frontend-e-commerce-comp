@@ -1,11 +1,27 @@
-import './assets/styles/main.css'
+import './assets/styles/main.css';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import App from './App.vue';
 
-const app = createApp(App)
+// Icons
+import { OhVueIcon, addIcons } from 'oh-vue-icons';
+import { GiHamburgerMenu } from 'oh-vue-icons/icons';
+import { HiHome, BiBagCheckFill, BiInfoCircle } from 'oh-vue-icons/icons';
+import { BiArrowRightCircleFill, CoCart, IoAddCircleSharp } from 'oh-vue-icons/icons';
 
-app.use(router)
+import router from './router';
 
-app.mount('#app')
+import { createPinia } from 'pinia';
+
+// Adding Icons
+addIcons(GiHamburgerMenu);
+addIcons(HiHome, BiBagCheckFill, BiInfoCircle);
+addIcons(BiArrowRightCircleFill, CoCart, IoAddCircleSharp);
+
+const app = createApp(App);
+app.component('VIcon', OhVueIcon);
+
+app.use(router);
+app.use(createPinia());
+
+app.mount('#app');
