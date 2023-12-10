@@ -2,9 +2,9 @@
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {}
+    extend: {},
   },
 
   // eslint-disable-next-line
-  plugins: ['prettier-plugin-tailwindcss', require('daisyui')]
-}
+  plugins: [require('daisyui')],
+};

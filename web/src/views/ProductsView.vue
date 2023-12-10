@@ -7,37 +7,35 @@ const imageURL = ref(null);
 
 onMounted(async () => {
   const { data } = await http.get('/api/products');
-  imageURL.value = http.defaults.baseURL;
+  imageURL.value = `${http.defaults.baseURL}storage`;
   products.value = data?.products;
 });
 </script>
 
 <template>
-  <section class="grid gap-4 m-4">
-    <div class="join justify-self-center w-full lg:w-8/12">
+  <section class="m-4 grid gap-4">
+    <div class="join w-full justify-self-center lg:w-8/12">
       <div class="w-full">
         <div class="w-full">
-          <input class="input w-full input-bordered join-item" placeholder="Search" />
+          <input class="input join-item input-bordered w-full" placeholder="Search" />
         </div>
       </div>
-      <select class="select select-bordered join-item">
+      <select class="join-item select select-bordered">
         <option disabled selected>Filter</option>
-        <option>Sci-fi</option>
-        <option>Drama</option>
-        <option>Action</option>
+        <option>Phones</option>
+        <option>Laptops</option>
+        <option>Refrigirators</option>
       </select>
-      <button class="btn join-item btn-primary">Search</button>
+      <button class="btn btn-primary join-item">Search</button>
     </div>
     <div class="flex justify-center">
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:w-8/12">
+      <div class="grid gap-4 md:grid-cols-2 lg:w-8/12 lg:grid-cols-3">
         <div v-for="(product, index) in products" :key="index" class="card bg-base-300">
           <figure>
             <img
-              class="h-[400px] object-cover w-full"
+              class="h-[400px] w-full object-cover"
               :src="
-                product.image
-                  ? `${imageURL}storage/${product.image}`
-                  : 'src/assets/img/placeholder.jpg'
+                product.image ? `${imageURL}/${product.image}` : 'src/assets/img/placeholder.jpg'
               "
               alt="product image"
             />
@@ -50,10 +48,10 @@ onMounted(async () => {
             </div>
             <div class="card-actions flex justify-between gap-x-5">
               <button class="btn btn-secondary" :class="product.quantity > 0 ? '' : 'btn-disabled'">
-                Add to cart <VIcon name="co-cart" />
+                Add to cart <v-icon name="co-cart" />
               </button>
-              <RouterLink class="btn btn-accent justify-self-end" to=""
-                >Details <VIcon name="bi-arrow-right-circle-fill"
+              <RouterLink class="btn btn-accent justify-self-end" :to="`/products/${product.id}`"
+                >Details <v-icon name="bi-arrow-right-circle-fill"
               /></RouterLink>
             </div>
           </div>

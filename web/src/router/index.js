@@ -25,8 +25,13 @@ const router = createRouter({
     },
     {
       path: '/products/new',
-      name: 'add product',
+      name: 'new product',
       component: () => import('../views/AddProductView.vue'),
+    },
+    {
+      path: '/products/:id',
+      name: 'product page',
+      component: () => import('../views/SingleProductView.vue'),
     },
   ],
 });
