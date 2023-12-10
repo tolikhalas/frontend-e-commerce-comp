@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router';
 import { Form, Field } from 'vee-validate';
 import http from '@/api';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const product = ref(null);
 const productId = ref(null);
@@ -34,14 +35,23 @@ const onChange = async (values) => {
   form.append('brand', values['brand']);
   form.append('model_name', values['model name']);
   form.append('quantity', values['quantity']);
-  form.append('image', values['image']);
+  if (values['image']) {
+    form.append('image', values['image']);
+  }
   form.append('description', values['description']);
 
-  await http.post(`/api/products/${productId.value}`, form, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  await http.post(`/api/products/${productId.value}`, form);
 
   router.push('/products');
+};
+
+const onDelete = async () => {
+  try {
+    await http.delete(`/api/products/${productId.value}`);
+    router.push('/products');
+  } catch (err) {
+    // console.error(err);
+  }
 };
 
 const getImageUrl = (name) => {
@@ -90,14 +100,19 @@ const getImageUrl = (name) => {
               v-model="product.description"
             />
           </div>
-          <div class="card-actions">
-            <input type="submit" class="btn btn-secondary" value="save" />
-            <RouterLink class="btn btn-accent" :to="`/products/${productId}`"
-              >discard & back</RouterLink
-            >
+          <div class="card-actions flex justify-between">
+            <div class="flex gap-x-4">
+              <input type="submit" class="btn btn-secondary" value="save" />
+              <RouterLink class="btn btn-accent" :to="`/products/${productId}`"
+                >discard & back</RouterLink
+              >
+            </div>
           </div>
         </div>
       </Form>
+      <div class="card-body">
+        <button class="btn btn-error" @click="onDelete">Delete the product</button>
+      </div>
     </div>
     <div v-else>
       <h1 class="text-3xl">No such product</h1>
