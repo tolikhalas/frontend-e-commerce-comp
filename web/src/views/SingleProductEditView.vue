@@ -64,7 +64,9 @@ onMounted(async () => {
           </div>
           <div class="card-actions">
             <button class="btn btn-secondary">save</button>
-            <button class="btn btn-accent">discard</button>
+            <RouterLink class="btn btn-accent" :to="`/products/${productId}`"
+              >discard & back</RouterLink
+            >
           </div>
         </div>
       </Form>
