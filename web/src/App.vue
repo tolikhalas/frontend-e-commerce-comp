@@ -1,23 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router';
+import Header from './components/Global/CustomHeader.vue';
+import Footer from './components/Global/CustomFooter.vue';
 </script>
 
 <template>
-  <section>
-    <header>
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-  
-      <div class="wrapper bg-slate-400">
-        <HelloWorld msg="You did it!" />
-  
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-        </nav>
-      </div>
-    </header>
-  
-    <RouterView />
-  </section>
+  <main class="flex flex-col min-h-screen">
+    <Header />
+    <div class="flex-1">
+      <RouterView class="flex-none" />
+    </div>
+    <Footer />
+  </main>
 </template>
