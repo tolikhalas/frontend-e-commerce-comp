@@ -31,9 +31,9 @@ onMounted(async () => {
       </figure>
       <div class="card-body">
         <h3 class="card-title">{{ product.name }}</h3>
-        <div class="flex gap-x-2">
-          <span class="font-semibold">{{ product.brand }}</span>
-          <span>{{ product.model_name }}</span>
+        <div>
+          <p><span class="font-semibold">Brand:</span> {{ product.brand }}</p>
+          <p><span class="font-semibold">Model:</span> {{ product.model_name }}</p>
         </div>
         <p>Quantity: {{ product.quantity }}</p>
         <p>{{ product.description ?? 'No description provided' }}</p>
