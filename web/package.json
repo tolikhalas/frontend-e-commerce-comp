@@ -15,6 +15,7 @@
     "axios": "^1.6.2",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",
+    "vee-validate": "^4.12.2",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5"
   },

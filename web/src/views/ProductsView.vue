@@ -14,7 +14,7 @@ onMounted(async () => {
 
 <template>
   <section class="grid gap-4 m-4">
-    <div class="join justify-self-center md:w-8/12">
+    <div class="join justify-self-center w-full lg:w-8/12">
       <div class="w-full">
         <div class="w-full">
           <input class="input w-full input-bordered join-item" placeholder="Search" />
