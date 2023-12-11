@@ -2,10 +2,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { RouterLink } from 'vue-router';
-import { Form, Field } from 'vee-validate';
+import { Form, Field, ErrorMessage } from 'vee-validate';
 import http from '@/api';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 
 const product = ref(null);
 const productId = ref(null);
@@ -28,6 +27,15 @@ onMounted(async () => {
   } catch (err) {}
 });
 
+const validationRules = {
+  name: 'required|min:3',
+  brand: 'required|min:2',
+  'model name': 'required|min:3',
+  quantity: 'required|numeric|min_value:0',
+  image: 'mimes:png,jpeg,jpg,gif',
+  description: 'min:5',
+};
+
 const onChange = async (values) => {
   const form = new FormData();
   form.append('_method', 'put');
@@ -49,9 +57,7 @@ const onDelete = async () => {
   try {
     await http.delete(`/api/products/${productId.value}`);
     router.push('/products');
-  } catch (err) {
-    // console.error(err);
-  }
+  } catch (err) {}
 };
 
 const getImageUrl = (name) => {
@@ -65,7 +71,7 @@ const getImageUrl = (name) => {
       >Back to products</RouterLink
     >
     <div v-if="product" class="card border bg-base-200">
-      <Form @submit="onChange">
+      <Form @submit="onChange" :validation-schema="validationRules">
         <figure class="rounded-t-xl lg:w-[600px]">
           <img :src="product.image" alt="product image" />
         </figure>
@@ -73,25 +79,30 @@ const getImageUrl = (name) => {
           <div class="flex flex-col">
             <label for="name">Product's name</label>
             <Field class="input" name="name" v-model="product.name" />
+            <ErrorMessage name="name" class="error" />
           </div>
           <div class="flex flex-col">
-            <label for="name">Product's brand</label>
+            <label for="brand">Product's brand</label>
             <Field class="input" name="brand" v-model="product.brand" />
+            <ErrorMessage name="brand" class="error" />
           </div>
           <div class="flex flex-col">
-            <label for="name">Product's model name</label>
-            <Field class="input" name="model_name" v-model="product.model_name" />
+            <label for="model name">Product's model name</label>
+            <Field class="input" name="model name" v-model="product.model_name" />
+            <ErrorMessage name="model name" class="error" />
           </div>
           <div class="flex flex-col">
-            <label for="name">Product's photo</label>
+            <label for="image">Product's photo</label>
             <Field class="file-input" type="file" name="image" />
+            <ErrorMessage name="image" class="error" />
           </div>
           <div class="flex flex-col">
-            <label for="name">Product's quantity</label>
+            <label for="quantity">Product's quantity</label>
             <Field class="input" type="number" name="quantity" v-model="product.quantity" />
+            <ErrorMessage name="quantity" class="error" />
           </div>
           <div class="flex flex-col">
-            <label for="name">Product's description</label>
+            <label for="description">Product's description</label>
             <Field
               class="textarea"
               as="textarea"
@@ -99,6 +110,7 @@ const getImageUrl = (name) => {
               name="description"
               v-model="product.description"
             />
+            <ErrorMessage name="description" class="error" />
           </div>
           <div class="card-actions flex justify-between">
             <div class="flex gap-x-4">
