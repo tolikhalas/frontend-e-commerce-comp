@@ -6,17 +6,27 @@ import http from '@/api';
 
 const product = ref(null);
 const productId = ref(null);
-const imageURL = ref(null);
 
 onMounted(async () => {
   const route = useRoute();
-  productId.value = route.params.id;
-  const { data } = await http.get(`/api/products/${productId.value}`);
-  product.value = data?.product;
-  if (product.value.image) {
-    imageURL.value = `${http.defaults.baseURL}storage/${product.value.image}`;
-  }
+  productId.value = Number(route.params.id);
+  try {
+    const response = await http.get(`/api/products/${productId.value}`);
+    if (response.status === 200) {
+      const data = await response.data;
+      product.value = data?.product;
+      if (!product.value.image) {
+        product.value.image = getImageUrl('placeholder.jpg');
+      } else {
+        product.value.image = `${http.defaults.baseURL}storage/${product.value.image}`;
+      }
+    }
+  } catch (err) {}
 });
+
+const getImageUrl = (name) => {
+  return new URL(`../assets/img/${name}`, import.meta.url).href;
+};
 </script>
 
 <template>
@@ -26,14 +36,13 @@ onMounted(async () => {
     >
     <div v-if="product" class="card border bg-base-200">
       <figure class="lg:w-[600px]">
-        <!-- FIXME: Placeholder image doesn't appear. Suggest that's internal bag -->
-        <img :src="imageURL ?? 'src/assets/img/placeholder.jpg'" alt="product image" />
+        <img :src="product.image" alt="product image" />
       </figure>
       <div class="card-body">
         <h3 class="card-title">{{ product.name }}</h3>
-        <div class="flex gap-x-2">
-          <span class="font-semibold">{{ product.brand }}</span>
-          <span>{{ product.model_name }}</span>
+        <div>
+          <p><span class="font-semibold">Brand:</span> {{ product.brand }}</p>
+          <p><span class="font-semibold">Model:</span> {{ product.model_name }}</p>
         </div>
         <p>Quantity: {{ product.quantity }}</p>
         <p>{{ product.description ?? 'No description provided' }}</p>
@@ -44,6 +53,9 @@ onMounted(async () => {
           <RouterLink class="btn btn-accent" :to="`/products/${productId}/edit`">Edit</RouterLink>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <h1 class="text-3xl">No such product</h1>
     </div>
   </section>
 </template>
