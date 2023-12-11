@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import http from '@/api';
+import router from '@/router';
 
 const formData = ref([
   {
@@ -9,24 +10,28 @@ const formData = ref([
     as: 'input',
     type: 'text',
     value: ref(''),
+    required: true,
   },
   {
     name: 'brand',
     as: 'input',
     type: 'text',
     value: ref(''),
+    required: true,
   },
   {
     name: 'model name',
     as: 'input',
     type: 'text',
     value: ref(''),
+    required: true,
   },
   {
     name: 'quantity',
     as: 'input',
-    type: 'number',
+    type: 'text',
     value: ref(0),
+    required: true,
   },
   {
     name: 'image',
@@ -41,6 +46,15 @@ const formData = ref([
   },
 ]);
 
+const validationRules = {
+  name: 'required|min:3',
+  brand: 'required|min:2',
+  'model name': 'required|min:3',
+  quantity: 'required|numeric|min_value:0',
+  image: 'mimes:png,jpeg,jpg,gif',
+  description: 'min:5',
+};
+
 const submitForm = (values) => {
   // Form submission logic
   const form = new FormData();
@@ -52,7 +66,8 @@ const submitForm = (values) => {
   form.append('description', values['description']);
 
   http.post('/api/products', form);
-  // console.log(`Form submitted: ${JSON.stringify(values, null, 2)}`);
+
+  router.push('/products');
 };
 </script>
 
@@ -60,7 +75,11 @@ const submitForm = (values) => {
   <section class="flex flex-1 flex-col items-center justify-center gap-y-4 p-8">
     <h1 class="text-xl font-semibold">New product</h1>
     <div class="mx-auto max-w-2xl rounded bg-white p-8 shadow-lg">
-      <Form @submit="submitForm" class="form-control grid gap-y-2">
+      <Form
+        @submit="submitForm"
+        class="form-control grid gap-y-2"
+        :validation-schema="validationRules"
+      >
         <template v-for="(field, index) in formData" :key="index">
           <label :for="field.name" class="mb-2 block text-sm font-bold text-gray-700">{{
             field.name
@@ -69,14 +88,14 @@ const submitForm = (values) => {
             :name="field.name"
             :type="field.type"
             class="w-full"
-            :class="
-              field.type === 'file'
-                ? 'file-input file-input-bordered file-input-primary'
-                : 'input input-bordered'
-            "
+            :class="{
+              'file-input file-input-bordered file-input-primary': field.type === 'file',
+              'input input-bordered': field.type !== 'file',
+              req: field.required,
+            }"
             :as="field.as"
           />
-          <ErrorMessage :name="field.name" />
+          <ErrorMessage :name="field.name" class="error" />
         </template>
 
         <!-- Submit Button -->

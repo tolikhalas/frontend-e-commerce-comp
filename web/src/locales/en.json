@@ -1,0 +1,11 @@
+{
+  "messages": {
+    "required": "{field} is required",
+    "min": "{field} must be at least 0:{min} characters",
+    "min_value": "{field} must be at least 0:{min}",
+    "numeric": "{field} must contains numbers only",
+    "image": "{field} must be an image",
+    "mimes": "{field} must be following types: 0:{mimes}, 1:{mimes}, 2:{mimes}, 3:{mimes}"
+    
+  }
+}

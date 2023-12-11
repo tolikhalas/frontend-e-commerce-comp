@@ -9,9 +9,14 @@ import { GiHamburgerMenu } from 'oh-vue-icons/icons';
 import { HiHome, BiBagCheckFill, BiInfoCircle } from 'oh-vue-icons/icons';
 import { BiArrowRightCircleFill, CoCart, IoAddCircleSharp } from 'oh-vue-icons/icons';
 
+// Router
 import router from './router';
 
+// Store
 import { createPinia } from 'pinia';
+
+// Validation
+import '@/validation';
 
 // Adding Icons
 addIcons(GiHamburgerMenu);

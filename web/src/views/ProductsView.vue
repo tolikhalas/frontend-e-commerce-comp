@@ -7,7 +7,7 @@ const imageURL = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await http.get('/api/products');
+    const response = await http.get('/api/products/');
     if (response.status === 200) {
       const data = response.data;
       imageURL.value = `${http.defaults.baseURL}storage`;
